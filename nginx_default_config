@@ -1,0 +1,30 @@
+#HTTP
+server{
+    listen 80;
+    server_name website.is www.website.is;
+    access_log /var/log/nginx/website.is_access.log main;
+    error_log /var/log/nginx/website.is_error.log warn;
+
+    ## redirect http to https ##
+    return 301 https://$server_name$request_uri;
+}
+#HTTPS
+server{
+    listen 443 ssl;
+    server_name website.is www.website.is;
+
+    access_log /var/log/nginx/website.is_access_ssl.log main;
+    error_log /var/log/nginx/website.is_error_ssl.log warn;
+    
+    ssl_certificate      cert_path;
+    ssl_certificate_key  cert_path;
+    ssl_protocols        TLSv1.2;
+
+    location / {
+        try_files $uri /index.html index.php;
+        root /var/www/website.is;
+        index index.php index.html;
+    } 
+
+
+}
